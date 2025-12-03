@@ -6,14 +6,39 @@ import * as Colyseus from "colyseus.js";
 let onlinePlayers = [];
 
 /*================================================
-| Colyseus connection with server
+| Local offline fallback room
 */
-var client = new Colyseus.Client('ws://localhost:3000');
-let room = client.joinOrCreate("poke_world").then(room => {
+class LocalRoom {
+    constructor() {
+        this.sessionId = "offline-player";
+        this.listeners = [];
+        console.info("Running in browser-only mode. Multiplayer features are disabled.");
+    }
+
+    onMessage(cb) {
+        this.listeners.push(cb);
+        // Immediately report that there are no other players connected.
+        cb({event: "CURRENT_PLAYERS", players: {}});
+    }
+
+    send(event, payload) {
+        console.debug(`[LocalRoom] Ignoring ${event}`, payload);
+    }
+}
+
+/*================================================
+| Colyseus connection with server (with offline fallback)
+*/
+const wsUrl = process.env.COLYSEUS_ENDPOINT || "ws://localhost:3000";
+const forceOffline = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("offline") === "true";
+
+const client = !forceOffline ? new Colyseus.Client(wsUrl) : null;
+let room = client && !forceOffline ? client.joinOrCreate("poke_world").then(room => {
     console.log(room.sessionId, "joined", room.name);
-    return room
+    return room;
 }).catch(e => {
-    console.log("JOIN ERROR", e);
-});
+    console.warn("JOIN ERROR. Falling back to offline mode.", e);
+    return new LocalRoom();
+}) : Promise.resolve(new LocalRoom());
 
 export {onlinePlayers, room};

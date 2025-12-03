@@ -1,8 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PokeMMO - Browser Edition</title>
+    <style>
+      body {
+        margin: 0;
+        background: #1b1f23;
+        color: #ffffff;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      header {
+        padding: 12px 16px;
+        background: #2d333b;
+        border-bottom: 1px solid #444c56;
+      }
+
+      .notice {
+        font-size: 14px;
+        opacity: 0.85;
+      }
+
+      #game-container {
+        width: 100vw;
+        height: calc(100vh - 56px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    </style>
   </head>
   <body>
+    <header>
+      <h1 style="margin: 0; font-size: 18px;">PokeMMO (Browser Mode)</h1>
+      <p class="notice">Runs fully in your browser. Multiplayer will connect when a game server is available; add <code>?offline=true</code> to force solo play.</p>
+    </header>
+    <div id="game-container"></div>
   </body>
 </html>

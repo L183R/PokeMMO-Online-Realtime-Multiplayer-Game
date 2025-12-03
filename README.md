@@ -28,3 +28,11 @@ $ node server.js
 $ cd client && npm start
 ```
 After successfully install go to [http://localhost:8080](http://localhost:8080/)
+
+### Play entirely in the browser
+- The client now falls back to a solo, browser-only mode when it cannot reach the Colyseus server.
+- Force offline play by opening the client with `?offline=true` (e.g. `http://localhost:8080/?offline=true`).
+- To host a static build without the game server:
+  1. `cd client && npm run build`
+  2. `npx http-server dist`
+  3. Open `http://localhost:8080` (or the port shown by `http-server`).
